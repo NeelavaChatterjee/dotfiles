@@ -1,0 +1,6 @@
+# Copy to 99-work.zsh and fill in.
+# Gitignored — Rackspace-internal stuff lives here.
+# Examples:
+# export AWS_PROFILE=...
+# alias ksaml='saml2aws login -a ...'
+# alias kdev='kubectl --context=...'
