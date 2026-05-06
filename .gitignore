@@ -10,3 +10,7 @@ dot_local/share/atuin/
 
 # OS noise
 .DS_Store
+
+# Superpowers brainstorm artifacts — ephemeral, not committed.
+# Specs/plans are scratchpads that helped reach the design; the code is source of truth.
+docs/superpowers/
