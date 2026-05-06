@@ -1,0 +1,7 @@
+# Repo metadata and docs — not part of the deployed dotfiles
+README.md
+LICENSE
+Brewfile
+dev-setup-notes.md
+docs
+docs/**
