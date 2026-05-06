@@ -1,0 +1,38 @@
+# XDG dirs (set early — many tools key off these)
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_CACHE_HOME="$HOME/.cache"
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_STATE_HOME="$HOME/.local/state"
+
+# Homebrew (Apple Silicon primary, Intel fallback)
+if   [[ -x /opt/homebrew/bin/brew ]]; then eval "$(/opt/homebrew/bin/brew shellenv)"
+elif [[ -x /usr/local/bin/brew    ]]; then eval "$(/usr/local/bin/brew shellenv)"
+fi
+
+# PATH: user-local first (uv tools override brew on shadow), then brew (above), then system
+typeset -U path PATH
+path=(
+  $HOME/.local/bin
+  $HOME/.krew/bin
+  $HOME/go/bin
+  $path
+)
+export PATH
+
+# Locale (containers / SSH'd shells often miss this)
+export LANG="en_US.UTF-8"
+export LC_ALL="en_US.UTF-8"
+
+# Editor / pager
+export EDITOR=nvim
+export VISUAL=nvim
+export PAGER=less
+export MANPAGER='nvim +Man!'
+
+# Less defaults: smart-case, raw color, quit-on-one-screen, preserve output, mouse
+export LESS='-iR -F -X --mouse'
+
+# Homebrew preferences
+export HOMEBREW_NO_ANALYTICS=1
+export HOMEBREW_NO_INSECURE_REDIRECT=1
+export HOMEBREW_BUNDLE_FILE="$HOME/platform9/dotfiles/Brewfile"
