@@ -66,8 +66,8 @@ Goal: sub-100ms startup, lean, fast.
 
 - **Plugin manager:** zinit or antidote (NOT Oh My Zsh). Both support lazy/turbo loading — plugins load *after* the prompt appears.
 - **Essential plugins only:**
-  - `zsh-users/zsh-autosuggestions`
-  - `zdharma-continuum/fast-syntax-highlighting` (faster than zsh-syntax-highlighting; load **last**)
+  - `zdharma-continuum/fast-syntax-highlighting` (faster than zsh-syntax-highlighting)
+  - `zsh-users/zsh-autosuggestions` (must be loaded **after** syntax-highlighting — otherwise the syntax-highlighter redraws over the suggestion ghost text)
   - `zsh-users/zsh-completions`
   - `Aloxaf/fzf-tab` — replaces tab completion with fzf (life-changing for kubectl/git)
 - **Prompt:** keep p10k. Add **instant prompt** at the very top of `.zshrc`:
