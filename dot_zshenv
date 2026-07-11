@@ -1,0 +1,3 @@
+# Bootstrap: zsh reads this from $HOME first, then defers everything to $ZDOTDIR.
+export ZDOTDIR="$HOME/.config/zsh"
+[[ -f $ZDOTDIR/.zshenv ]] && source $ZDOTDIR/.zshenv

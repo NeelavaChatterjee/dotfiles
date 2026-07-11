@@ -1,0 +1,78 @@
+# Brewfile.common — installed on every machine (all roles).
+# Cask lines are macOS-only; the Linux install path skips them (deferred).
+
+# ---- Shell / core ----
+brew "zsh"
+brew "antidote"
+brew "powerlevel10k"
+brew "atuin"
+brew "direnv"
+brew "fzf"
+brew "zoxide"
+brew "fnm"
+brew "chezmoi"
+brew "tmux"
+
+# ---- Better-unix (daily) ----
+brew "ripgrep"
+brew "fd"
+brew "bat"
+brew "eza"
+brew "git-delta"
+brew "btop"
+brew "jq"
+brew "yq"
+
+# ---- Editors ----
+brew "neovim"
+brew "helix"
+brew "tree-sitter-cli"
+
+# ---- Languages / Go ----
+brew "go"
+brew "uv"
+brew "gopls"
+brew "delve"
+brew "golangci-lint"
+brew "gotestsum"
+brew "staticcheck"
+brew "sqlc"
+
+# ---- Kubernetes core ----
+brew "kubernetes-cli"
+brew "helm"
+brew "k9s"
+brew "kubectx"
+brew "kustomize"
+brew "kubecolor"
+brew "krew"
+brew "kind"
+brew "stern"
+
+# ---- Git ----
+brew "git"
+brew "gh"
+brew "git-filter-repo"
+
+# ---- Misc ----
+brew "telnet"
+brew "qemu"
+brew "cmatrix"
+brew "opencode"
+brew "syncthing"
+
+# ---- Casks (macOS) ----
+cask "ghostty"
+cask "zed"
+cask "orbstack"
+cask "claude"
+cask "claude-code@latest"
+cask "cmux"
+cask "obsidian"
+cask "stats"
+cask "localsend"
+cask "brave-browser"
+cask "google-chrome"
+cask "zen"
+cask "spotify"
+cask "iina"

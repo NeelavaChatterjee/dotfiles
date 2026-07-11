@@ -1,0 +1,2 @@
+# Brewfile.personal — installed only when role == personal.
+# Empty for now (zen moved to common). Fills out when the personal Mac is set up.

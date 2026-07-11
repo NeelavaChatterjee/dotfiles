@@ -1,0 +1,40 @@
+# Profiling: uncomment this and the matching `zprof` at the bottom to debug slow startup.
+# zmodload zsh/zprof
+
+# p10k instant prompt — must run before anything that prints to stdout
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
+# Antidote: static-load — compile .zsh_plugins.txt → .zsh_plugins.zsh only when txt is newer.
+# Steady-state startup just sources the precompiled file.
+ANTIDOTE_HOME="${HOMEBREW_PREFIX:-/opt/homebrew}/share/antidote"
+zsh_plugins="$ZDOTDIR/.zsh_plugins.zsh"
+if [[ ! $zsh_plugins -nt $ZDOTDIR/.zsh_plugins.txt ]]; then
+  source "$ANTIDOTE_HOME/antidote.zsh"
+  antidote bundle <"$ZDOTDIR/.zsh_plugins.txt" >|"$zsh_plugins"
+fi
+source "$zsh_plugins"
+
+# Powerlevel10k theme (sourced directly from brew formula — faster than via antidote)
+source "${HOMEBREW_PREFIX:-/opt/homebrew}/share/powerlevel10k/powerlevel10k.zsh-theme"
+
+# Completion init — -C skips daily security check (cache trust assumed)
+autoload -Uz compinit
+compinit -C
+
+# Source numbered conf.d/ fragments in order
+for f in $ZDOTDIR/conf.d/*.zsh(N); do source "$f"; done
+
+# Tool hooks (each guarded so missing tools don't break startup).
+# Order matters: atuin must be LAST so it claims Ctrl-R from fzf.
+command -v zoxide >/dev/null && eval "$(zoxide init zsh --cmd z)"
+command -v direnv >/dev/null && eval "$(direnv hook zsh)"
+command -v fnm    >/dev/null && eval "$(fnm env --use-on-cd)"
+command -v fzf    >/dev/null && source <(fzf --zsh)
+command -v atuin  >/dev/null && eval "$(atuin init zsh)"
+
+# p10k user config — sourced last
+[[ ! -f $ZDOTDIR/.p10k.zsh ]] || source $ZDOTDIR/.p10k.zsh
+
+# zprof  # paired with the zmodload at top — uncomment together when profiling

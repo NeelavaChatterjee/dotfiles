@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Re-runs whenever the assembled bundle content or the skip-list changes:
+#   common: {{ include "packages/Brewfile.common" | sha256sum }}
+#   role:   {{ include (printf "packages/Brewfile.%s" .role) | sha256sum }}
+#   skip:   {{ .packagesSkip | sha256sum }}
+
+{{ if eq .chezmoi.os "darwin" -}}
+skip='{{ .packagesSkip | replace " " "" | replace "," "|" }}'
+
+BUNDLE="$(cat <<'BREWFILE'
+{{ include "packages/Brewfile.common" }}
+{{ include (printf "packages/Brewfile.%s" .role) }}
+BREWFILE
+)"
+
+if [ -n "$skip" ]; then
+  # Drop any brew/cask line whose name is in the local skip-list (MDM-managed).
+  BUNDLE="$(printf '%s\n' "$BUNDLE" | grep -Ev "^(brew|cask) \"($skip)\"")"
+fi
+
+echo "[install-packages] running brew bundle for role={{ .role }} ..."
+printf '%s\n' "$BUNDLE" | brew bundle --file=/dev/stdin
+{{ else -}}
+echo "[install-packages] Linux package install not yet implemented — see packages/packages.linux"
+{{ end -}}

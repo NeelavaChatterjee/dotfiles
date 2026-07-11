@@ -1,0 +1,16 @@
+# zsh — runtime/derived files we don't want in the repo
+dot_config/zsh/cache/
+dot_config/zsh/conf.d/99-work.zsh
+dot_config/zsh/dot_zsh_history
+dot_config/zsh/dot_zcompdump*
+dot_config/zsh/dot_zsh_plugins.zsh
+
+# atuin local DB (not the config; only the DB)
+dot_local/share/atuin/
+
+# OS noise
+.DS_Store
+
+# Superpowers brainstorm artifacts — ephemeral, not committed.
+# Specs/plans are scratchpads that helped reach the design; the code is source of truth.
+docs/superpowers/

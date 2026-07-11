@@ -1,0 +1,22 @@
+# Brewfile.work — installed only when role == work.
+
+tap "atlassian/acli"
+
+# ---- Corp / platform ----
+brew "openstackclient"
+brew "atlassian/acli/acli"          # acli — Atlassian CLI (Jira/Confluence)
+brew "hf"                            # huggingface CLI (LLM platform work)
+brew "kubebuilder"                   # controller/operator scaffolding
+
+# ---- Casks (macOS) ----
+cask "goland"
+cask "twingate"
+cask "hoppscotch"
+cask "keeweb"
+cask "google-drive"
+cask "thebrowsercompany-dia"         # Dia — daily work browser
+
+# ---- Comms (skipped on machines where MDM owns them; see packagesSkip) ----
+cask "microsoft-teams"
+cask "slack"
+cask "zoom"
