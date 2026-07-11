@@ -1,5 +1,5 @@
 # Copy to 99-work.zsh and fill in.
-# Gitignored — corp-internal stuff lives here.
+# Gitignored — corp/work-internal config lives here (never committed).
 # Examples:
 # export AWS_PROFILE=...
 # alias ksaml='saml2aws login -a ...'
