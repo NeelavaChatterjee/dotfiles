@@ -1,76 +1,66 @@
 # dotfiles
 
-Personal dotfiles for provisioning macOS development machines. Linux variant TBD.
+Personal dotfiles for provisioning dev machines across contexts (work / personal) and
+OSes (macOS now; Linux/VM stubbed). Managed by [chezmoi](https://www.chezmoi.io/).
 
-Managed by [chezmoi](https://www.chezmoi.io/) with files using its `dot_*` source naming. Tooling install manifest in [`Brewfile`](./Brewfile). Tooling philosophy and the rationale behind tool picks lives in [`dev-setup-notes.md`](./dev-setup-notes.md) — read first if you want the *why*.
+**Philosophy & tool rationale:** [`dev-setup-notes.md`](./dev-setup-notes.md).
+**Deferred tools (install when needed):** [`docs/backlog.md`](./docs/backlog.md).
 
-## What's in here
+## How it fits together
 
-- **`Brewfile`** — every CLI tool, app cask, and tap I rely on. Driven by `brew bundle install`.
-- **`dot_zshenv`** + **`dot_config/zsh/`** — modular zsh layout: bootstrap that sets `ZDOTDIR=$HOME/.config/zsh`, real env file, antidote-managed plugins (lean: 4 essentials), p10k prompt, and numbered `conf.d/*.zsh` fragments for options/completions/aliases/functions/k8s.
-- **`dot_config/atuin/config.toml`** — atuin owns Ctrl-R + ↑ with fuzzy search, session-filtered up-arrow.
-- **`dev-setup-notes.md`** — the long-form philosophy doc.
+- **Machine identity** is chosen once at `chezmoi init` (`role` = work|personal, `headless`,
+  and `packagesSkip`) and stored **locally** in `~/.config/chezmoi/chezmoi.toml` — never in git.
+- **Config** lives as `dot_*` files (chezmoi source naming) and deploys to `$HOME`.
+- **Packages** live in `packages/Brewfile.{common,work,personal}`. On `chezmoi apply`, a
+  `run_onchange_` script assembles `common + <role>`, drops anything in your local
+  `packagesSkip`, and runs `brew bundle`. `packages/` and `docs/` are never deployed.
+- **`packagesSkip`** is how you tell brew *not* to touch apps another system (e.g. MDM) already
+  owns. Add names to it in your local config; nothing machine-specific hits the public repo.
 
-The shell config targets sub-100ms steady-state startup using antidote's static-load pattern + p10k instant prompt + cached completions.
-
-## Getting started on a fresh mac
+## Fresh machine (macOS)
 
 ```bash
-# 1. Xcode CLI tools
 xcode-select --install
-
-# 2. Homebrew
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+sh -c "$(curl -fsSL https://get.chezmoi.io)" -- init --apply NeelavaChatterjee
+# answer: role, headless, packagesSkip  → dotfiles applied + packages installed
 
-# 3. chezmoi: clone + apply this repo as the source of truth for $HOME
-brew install chezmoi
-chezmoi init https://github.com/NeelavaChatterjee/dotfiles
-chezmoi apply
-
-# 4. brew bundle: install everything from the Brewfile that just got deployed
-brew bundle install --file=~/platform9/dotfiles/Brewfile
-
-# 5. fnm (Node) + corepack (yarn/pnpm shim)
-eval "$(fnm env --use-on-cd)"
-fnm install --lts
-fnm default "$(fnm current)"
-corepack enable
-
-# 6. krew kubectl plugins (krew binary itself is in the Brewfile)
+# post-install (documented, run once):
+eval "$(fnm env --use-on-cd)"; fnm install --lts; fnm default "$(fnm current)"; corepack enable
 kubectl krew install neat oidc-login virt
-
-# 7. New shell — config is live
 exec zsh
 ```
 
-That's it. Open a new terminal and you should land on a p10k prompt with the new aliases, atuin Ctrl-R, etc.
-
-### If you forked this
-
-- Replace the `chezmoi init` URL with your own fork.
-- Optionally, rename the path the Brewfile is loaded from. The `HOMEBREW_BUNDLE_FILE` export in `dot_config/zsh/dot_zshenv` points at `$HOME/platform9/dotfiles/Brewfile` — adjust to wherever you keep the repo.
-- Anything corp-specific belongs in `~/.config/zsh/conf.d/99-work.zsh` (gitignored). A template lives at `99-work.zsh.example` to copy from.
-
 ## Day-to-day
 
-- **Edit a config file:** edit it directly in `~/platform9/dotfiles/`, then `chezmoi apply` to push to `$HOME`. Or edit the deployed file and run `chezmoi re-add` to pull it back into the source.
-- **Diff before applying:** `chezmoi diff` — shows what `apply` would change.
-- **Update tools:** `brew bundle install` (idempotent — picks up additions). `brew bundle cleanup --file=Brewfile` lists removals; add `--force` to actually remove.
-- **Profile slow zsh startup:** uncomment the `zmodload zsh/zprof` block at the top and bottom of `dot_config/zsh/dot_zshrc`, restart shell, post-mortem.
+- **Edit config:** edit in `~/platform9/dotfiles`, then `chezmoi diff` → `chezmoi apply`
+  (this machine's `sourceDir` points at the working tree). Push to publish to other machines.
+- **Other machines:** `chezmoi update` pulls from the public upstream and applies.
+- **See machine state:** `dotstatus` — role/os/headless/skip, dotfile drift, packages-vs-manifest.
+- **Add a package:** add the line to the right `packages/Brewfile.*`, `chezmoi apply` (auto-installs).
+- **Skip an MDM-managed app:** add its name to `packagesSkip` in `~/.config/chezmoi/chezmoi.toml`.
+- **Adopt a backlog tool:** `brew install <x>`; if it sticks, move it into `packages/Brewfile.*`.
+- **Remove packages (manual, deliberate):**
+  ```bash
+  cat packages/Brewfile.common packages/Brewfile.$(chezmoi data | jq -r .role) \
+    | grep -E '^(brew|cask)' | brew bundle cleanup --file=/dev/stdin   # add --force to remove
+  ```
+
+## Discipline / gotchas
+
+- **Author only in `~/platform9/dotfiles`.** Don't `chezmoi add`/`re-add` from another clone or
+  the source and working copy will drift.
+- The public repo holds **no secrets or corp-identifying config**. Corp bits live in a gitignored
+  `~/.config/zsh/conf.d/99-work.zsh` and in local `chezmoi` data. Secrets stay in Keychain /
+  `saml2aws` / `gh` / `twingate`.
 
 ## Recovery
 
-If a config edit breaks your shell:
-
 ```bash
-# In any working terminal:
-ZDOTDIR=/tmp zsh           # bypasses your config
-
-# From SSH or recovery:
-zsh --no-rcs               # zsh with NO config files at all
+ZDOTDIR=/tmp zsh     # bypass your config
+zsh --no-rcs         # zsh with no config at all
 ```
-
-Then fix the offending file, run `chezmoi apply`, open a new shell.
+Fix the offending file, `chezmoi apply`, open a new shell.
 
 ## License
 
