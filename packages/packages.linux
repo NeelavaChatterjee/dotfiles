@@ -1,0 +1,2 @@
+# packages.linux — placeholder for the Linux/VM package layer (apt/dnf/nix/etc.).
+# Deferred until the Linux box / dev VM comes online. See docs/backlog.md.
