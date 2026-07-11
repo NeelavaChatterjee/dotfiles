@@ -1,7 +1,15 @@
-# Repo metadata and docs — not part of the deployed dotfiles
+# Repo meta and docs — never deployed to $HOME (but readable by scripts in the source root).
 README.md
 LICENSE
-Brewfile
 dev-setup-notes.md
 docs
 docs/**
+packages
+packages/**
+
+# Ephemeral brainstorm artifacts (also gitignored via .gitignore).
+docs/superpowers
+docs/superpowers/**
+
+# Role-conditional: the work example fragment only makes sense on work machines.
+{{ if ne .role "work" }}dot_config/zsh/conf.d/99-work.zsh.example{{ end }}
