@@ -35,4 +35,3 @@ export LESS='-iR -F -X --mouse'
 # Homebrew preferences
 export HOMEBREW_NO_ANALYTICS=1
 export HOMEBREW_NO_INSECURE_REDIRECT=1
-export HOMEBREW_BUNDLE_FILE="$HOME/platform9/dotfiles/Brewfile"
