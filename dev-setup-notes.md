@@ -3,6 +3,12 @@
 > Personal reference compiled from extended planning conversation.
 > Context: software developer working primarily with Kubernetes and Go, building an LLM inference + fine-tuning + RAG platform. Writes controllers, works with GPUs, has bash/Python background, prior OpenStack experience. Already comfortable with zsh + powerlevel10k + plugins on current work laptop. Setting up a new work laptop and wants this done deliberately.
 
+> **STATUS (2026-07): reality update.** This doc is the original long-form philosophy and
+> remains the "why." What actually shipped diverged in places: **Helix is the primary terminal
+> editor** (not Neovim-first), the default install is **lean** (see `packages/Brewfile.*`), and
+> aspirational tools now live in [`docs/backlog.md`](./docs/backlog.md) for one-at-a-time
+> adoption. Per-app configs (editor/tmux/ghostty/git/ssh) are tracked as separate follow-ups.
+
 ---
 
 ## Table of Contents
