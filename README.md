@@ -33,8 +33,8 @@ exec zsh
 
 ## Day-to-day
 
-- **Edit config:** edit in `~/dev/dotfiles`, then `chezmoi diff` → `chezmoi apply`
-  (this machine's `sourceDir` points at the working tree). Push to publish to other machines.
+- **Edit config:** edit in your working checkout (e.g. `~/dev/dotfiles`), then `chezmoi diff` → `chezmoi apply`
+  (this machine's local `sourceDir` points chezmoi at that checkout — see [Genericity](#genericity)). Push to publish to other machines.
 - **Other machines:** `chezmoi update` pulls from the public upstream and applies.
 - **See machine state:** `dotstatus` — role/os/headless/skip, dotfile drift, packages-vs-manifest.
 - **Add a package:** add the line to the right `packages/Brewfile.*`, `chezmoi apply` (auto-installs).
@@ -48,11 +48,29 @@ exec zsh
 
 ## Discipline / gotchas
 
-- **Author only in `~/dev/dotfiles`.** Don't `chezmoi add`/`re-add` from another clone or
-  the source and working copy will drift.
+- **Author only in your working checkout** (the dir your local `sourceDir` points at). Don't `chezmoi add`/`re-add` from another clone or the source and working copy will drift.
 - The public repo holds **no secrets or corp-identifying config**. Corp bits live in a gitignored
   `~/.config/zsh/conf.d/99-work.zsh` and in local `chezmoi` data. Secrets stay in Keychain /
   `saml2aws` / `gh` / `twingate`.
+
+## Genericity
+
+Nothing machine-, user-, or org-specific is committed — so this repo works for anyone:
+
+- **No hardcoded working-copy path.** Where you keep your editable checkout is a personal
+  choice, recorded only in your local `~/.config/chezmoi/chezmoi.toml` as
+  `sourceDir = "<your path>"` (never committed). If you *don't* set it, `chezmoi init <user>`
+  clones to the default `~/.local/share/chezmoi` and everything still works — no separate
+  checkout needed. The `~/dev/dotfiles` in this README is just an example.
+- **No usernames or hostnames.** Paths use `~`/`$HOME`; anything needing the real home dir
+  uses chezmoi template vars (`.chezmoi.homeDir`, `.chezmoi.username`, `.chezmoi.hostname`),
+  never a literal.
+- **No org/employer identifiers.** Corp-specific config lives in a gitignored
+  `~/.config/zsh/conf.d/99-work.zsh` and in local (uncommitted) `chezmoi` data.
+- **Per-machine differences come from data, not files.** `role` / `os` / `headless` /
+  `packagesSkip` are prompted once and stored locally; the committed templates branch on them.
+- **Forking:** replace `NeelavaChatterjee` in the `chezmoi init` command with your own GitHub
+  handle. That's the only edit a fork needs.
 
 ## Recovery
 
