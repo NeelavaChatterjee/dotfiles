@@ -36,10 +36,6 @@ chezmoi init --apply NeelavaChatterjee
 # post-install (documented, run once):
 eval "$(fnm env --use-on-cd)"; fnm install --lts; fnm default "$(fnm current)"; corepack enable
 kubectl krew install neat oidc-login virt
-
-# nvim config lives in its own repo (a kickstart.nvim fork), not chezmoi:
-git clone git@github.com:NeelavaChatterjee/kickstart.nvim.git ~/.config/nvim
-
 exec zsh
 ```
 
@@ -81,10 +77,11 @@ chezmoi init --apply NeelavaChatterjee
 - The public repo holds **no secrets or corp-identifying config**. Corp bits live in a gitignored
   `~/.config/zsh/conf.d/99-work.zsh` and in local `chezmoi` data. Secrets stay in Keychain /
   `saml2aws` / `gh` / `twingate`.
-- **Apps that vendor an entire upstream project as their config** (e.g. `~/.config/nvim`, a
-  `kickstart.nvim` fork with its own git remote) aren't chezmoi-managed — chezmoi doesn't add
-  or touch their files at all. Fresh-machine setup just clones the fork directly (see above);
-  day-to-day edits/commits happen in that repo, not here.
+- **`~/.config/nvim`** started life as a `kickstart.nvim` fork (its own git repo) but is now
+  plain chezmoi-managed files like everything else — no separate clone step, no second remote
+  to keep in sync. It still uses `lazy.nvim` as its plugin manager; `lazy-lock.json` is tracked
+  so plugin versions stay pinned across machines. First launch on a new machine bootstraps
+  `lazy.nvim` and installs plugins automatically.
 
 ## Genericity
 
