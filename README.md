@@ -17,18 +17,34 @@ OSes (macOS now; Linux/VM stubbed). Managed by [chezmoi](https://www.chezmoi.io/
 - **`packagesSkip`** is how you tell brew *not* to touch apps another system (e.g. MDM) already
   owns. Add names to it in your local config; nothing machine-specific hits the public repo.
 
-## Fresh machine (macOS)
+## Fresh machine
+
+Philosophy: the package manager owns everything it can. The only thing installed by a raw
+`curl | sh` script is the package manager itself (chicken-and-egg — nothing else can install it).
+Everything downstream, including chezmoi, goes through `brew`/`pacman`/`yay`/etc.
+
+**macOS:**
 
 ```bash
 xcode-select --install
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-sh -c "$(curl -fsSL https://get.chezmoi.io)" -- init --apply NeelavaChatterjee
+brew install chezmoi
+chezmoi init --apply NeelavaChatterjee
 # answer: role, headless, packagesSkip  → dotfiles applied + packages installed
 
 # post-install (documented, run once):
 eval "$(fnm env --use-on-cd)"; fnm install --lts; fnm default "$(fnm current)"; corepack enable
 kubectl krew install neat oidc-login virt
 exec zsh
+```
+
+**Arch Linux** (pattern only — Linux package installation isn't wired up yet, see
+`packages/packages.linux` and `docs/backlog.md`; this just gets chezmoi itself onto the box):
+
+```bash
+sudo pacman -Syu --needed base-devel git
+sudo pacman -S chezmoi || yay -S chezmoi   # chezmoi is in Arch's official repos; yay/AUR is the fallback
+chezmoi init --apply NeelavaChatterjee
 ```
 
 ## Day-to-day

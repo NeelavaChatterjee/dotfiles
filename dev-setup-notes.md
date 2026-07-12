@@ -330,9 +330,8 @@ Rust is the **enabler** (memory safety, cargo, single static binary, attracted d
 
 ### Install
 
-```bash
-curl -LsSf https://astral.sh/uv/install.sh | sh
-```
+Managed via `packages/Brewfile.common` (`brew "uv"`) — installed automatically on `chezmoi apply`,
+not via the upstream `curl | sh` installer.
 
 ### Workflows
 
