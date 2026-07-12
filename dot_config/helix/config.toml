@@ -1,0 +1,4 @@
+theme = "kanagawa"
+
+[editor]
+default-yank-register = "+" 
