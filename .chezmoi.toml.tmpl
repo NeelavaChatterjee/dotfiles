@@ -1,8 +1,10 @@
 {{- $role := promptStringOnce . "role" "Machine role (work/personal)" "work" -}}
 {{- $headless := promptBoolOnce . "headless" "Headless / no-GUI machine (VM)?" false -}}
 {{- $skip := promptStringOnce . "packagesSkip" "Apps managed elsewhere (MDM), comma-separated" "" -}}
+{{- $email := promptStringOnce . "email" "Git commit email for this machine" "" -}}
 
 [data]
     role = {{ $role | quote }}
     headless = {{ $headless }}
     packagesSkip = {{ $skip | quote }}
+    email = {{ $email | quote }}
