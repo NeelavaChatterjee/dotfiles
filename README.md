@@ -50,6 +50,11 @@ chezmoi init --apply NeelavaChatterjee
 
 ## Day-to-day
 
+- **Track a new (currently unmanaged) file:** `chezmoi add <path>` copies its current content
+  into the source dir under the right `dot_*` name. Check `chezmoi diff` afterward — it should
+  come back empty, confirming the source now matches what's already deployed — then
+  `git add`/`commit`/`push` from the source dir like any other change. Use `chezmoi unmanaged`
+  to see what's not yet tracked.
 - **Edit config:** `chezmoi cd` drops you into the source directory — the default
   `~/.local/share/chezmoi`, the same path on every machine, so no per-machine setup is needed
   (see [Genericity](#genericity)). Edit there, `chezmoi diff` → `chezmoi apply` to test locally,
