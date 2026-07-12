@@ -59,6 +59,7 @@ brew "telnet"
 brew "qemu"
 brew "cmatrix"
 brew "opencode"
+brew "pi-coding-agent"
 brew "syncthing"
 
 # ---- Casks (macOS) ----

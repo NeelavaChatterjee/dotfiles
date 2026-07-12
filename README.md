@@ -33,12 +33,20 @@ exec zsh
 
 ## Day-to-day
 
-- **Edit config:** edit in your working checkout (e.g. `~/dev/dotfiles`), then `chezmoi diff` → `chezmoi apply`
-  (this machine's local `sourceDir` points chezmoi at that checkout — see [Genericity](#genericity)). Push to publish to other machines.
+- **Edit config:** `chezmoi cd` drops you into the source directory — the default
+  `~/.local/share/chezmoi`, the same path on every machine, so no per-machine setup is needed
+  (see [Genericity](#genericity)). Edit there, `chezmoi diff` → `chezmoi apply` to test locally,
+  then `git commit` + `git push` to publish.
 - **Other machines:** `chezmoi update` pulls from the public upstream and applies.
 - **See machine state:** `dotstatus` — role/os/headless/skip, dotfile drift, packages-vs-manifest.
 - **Add a package:** add the line to the right `packages/Brewfile.*`, `chezmoi apply` (auto-installs).
 - **Skip an MDM-managed app:** add its name to `packagesSkip` in `~/.config/chezmoi/chezmoi.toml`.
+- **Change machine role/headless/packagesSkip** (e.g. this Mac switched from personal to work):
+  either hand-edit the `[data]` block in `~/.config/chezmoi/chezmoi.toml`, or run
+  `chezmoi init --prompt` to re-run the guided prompts (safe to re-run — it won't re-clone an
+  existing source dir, it only regenerates the config). Either way, follow with `chezmoi apply`
+  to deploy the change. Note: switching roles doesn't uninstall the old role's packages —
+  see "Remove packages" below if you need to prune them.
 - **Adopt a backlog tool:** `brew install <x>`; if it sticks, move it into `packages/Brewfile.*`.
 - **Remove packages (manual, deliberate):**
   ```bash
