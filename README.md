@@ -9,7 +9,8 @@ OSes (macOS now; Linux/VM stubbed). Managed by [chezmoi](https://www.chezmoi.io/
 ## How it fits together
 
 - **Machine identity** is chosen once at `chezmoi init` (`role` = work|personal, `headless`,
-  and `packagesSkip`) and stored **locally** in `~/.config/chezmoi/chezmoi.toml` — never in git.
+  `packagesSkip`, and `email` — your git commit email for this machine) and stored **locally**
+  in `~/.config/chezmoi/chezmoi.toml` — never in git.
 - **Config** lives as `dot_*` files (chezmoi source naming) and deploys to `$HOME`.
 - **Packages** live in `packages/Brewfile.{common,work,personal}`. On `chezmoi apply`, a
   `run_onchange_` script assembles `common + <role>`, drops anything in your local
