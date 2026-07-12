@@ -31,11 +31,15 @@ xcode-select --install
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 brew install chezmoi
 chezmoi init --apply NeelavaChatterjee
-# answer: role, headless, packagesSkip  → dotfiles applied + packages installed
+# answer: role, headless, packagesSkip, email  → dotfiles applied + packages installed
 
 # post-install (documented, run once):
 eval "$(fnm env --use-on-cd)"; fnm install --lts; fnm default "$(fnm current)"; corepack enable
 kubectl krew install neat oidc-login virt
+
+# nvim config lives in its own repo (a kickstart.nvim fork), not chezmoi:
+git clone git@github.com:NeelavaChatterjee/kickstart.nvim.git ~/.config/nvim
+
 exec zsh
 ```
 
@@ -77,6 +81,10 @@ chezmoi init --apply NeelavaChatterjee
 - The public repo holds **no secrets or corp-identifying config**. Corp bits live in a gitignored
   `~/.config/zsh/conf.d/99-work.zsh` and in local `chezmoi` data. Secrets stay in Keychain /
   `saml2aws` / `gh` / `twingate`.
+- **Apps that vendor an entire upstream project as their config** (e.g. `~/.config/nvim`, a
+  `kickstart.nvim` fork with its own git remote) aren't chezmoi-managed — chezmoi doesn't add
+  or touch their files at all. Fresh-machine setup just clones the fork directly (see above);
+  day-to-day edits/commits happen in that repo, not here.
 
 ## Genericity
 
